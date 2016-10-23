@@ -88,7 +88,7 @@ set(PROJECT_NAMESPACE ${PROJECT_NAME})
 #-------------------------------------------------------------------------------
 # Include Src to build library driverlib, utils and drivers
 #-------------------------------------------------------------------------------
-add_subdirectory(src/driverlib)
+add_subdirectory(src)
 
 # --------------------------------------------------------------------
 # Generate CPACK installer
