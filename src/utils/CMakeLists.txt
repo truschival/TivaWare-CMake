@@ -40,7 +40,19 @@ LIST(APPEND MODULE_DEPS TivaWare::drivers)
 #------------------------------
 set(SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/cmdline.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/cpu_usage.c  
+  ${CMAKE_CURRENT_SOURCE_DIR}/cpu_usage.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/eeprom_pb.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/flash_pb.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/isqrt.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/random.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/ringbuf.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/scheduler.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/sine.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/smbus.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/softi2c.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/softssi.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/softuart.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/spi_flash.c
   ${CMAKE_CURRENT_SOURCE_DIR}/uartstdio.c
   ${CMAKE_CURRENT_SOURCE_DIR}/ustdlib.c
   )
