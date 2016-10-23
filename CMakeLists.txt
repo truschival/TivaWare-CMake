@@ -24,11 +24,6 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
   SET(CMAKE_INSTALL_PREFIX ${STAGING_DIR} )
 endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
-# Add definitons without -D!
-SET(ARDUINO_COMPILE_DEFINITIONS ARDUINO=${PROJECT_MAJOR_VERSION}${PROJECT_MINOR_VERSION}${PROJECT_PATCH_VERSION})
-LIST(APPEND ARDUINO_COMPILE_DEFINITIONS F_CPU=16000000L)
-LIST(APPEND ARDUINO_COMPILE_DEFINITIONS USB_VID=null USB_PID=null)
-
 #-------------------------------------------------------------------------------
 # Print Summary
 #-------------------------------------------------------------------------------
@@ -111,4 +106,4 @@ SET(CPACK_NSIS_MODIFY_PATH ON)
 
 INCLUDE(CPack)
 
-MESSAGE(STATUS "** end CMakeLists.txt **\n")
+

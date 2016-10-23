@@ -1,4 +1,4 @@
-MESSAGE(STATUS "\n Checking ${CMAKE_CURRENT_SOURCE_DIR}\n")
+MESSAGE(STATUS "\n Checking ${CMAKE_CURRENT_SOURCE_DIR}")
 
 # Here the component/package will be called TivaWare (see project)
 SET(COMPONENT_NAME "drivers")
