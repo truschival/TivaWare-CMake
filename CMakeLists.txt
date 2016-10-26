@@ -86,6 +86,26 @@ set(PROJECT_NAMESPACE ${PROJECT_NAME})
 add_subdirectory(src)
 
 # --------------------------------------------------------------------
+# Config package TivaWare
+# --------------------------------------------------------------------
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  ${version_config}
+  VERSION ${LIBRARY_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+# Configure '<PROJECT-NAME>Config.cmake'
+configure_file("${CMAKE_SOURCE_DIR}/cmake/Config.master.cmake.in"
+  "${PROJECT_NAME}" @ONLY)
+
+INSTALL(
+  FILES "${component_config}" "${version_config}"
+  COMPONENT DEVELOP
+  DESTINATION "${INSTALL_CMAKE_DIR}/${namespace}"
+  )  
+  
+  
+# --------------------------------------------------------------------
 # Generate CPACK installer
 # --------------------------------------------------------------------
 set(CPACK_GENERATOR TGZ)
