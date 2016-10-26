@@ -5,36 +5,33 @@ SET(CMAKE_SYSTEM_PROCESSOR arm)
 SET(CMAKE_CROSSCOMPILING 1)
 SET(CMAKE_SYSTEM_VERSION 2.0.1)
 
-if (WIN32)
-    SET(EXECUTABLE_SUFFIX ".exe")
-endif (WIN32)
-
-
-# Cross-Compile Prefix
-SET(TOOLCHAIN_PATH  "C:/Users/THRS/Tools/gcc-arm-none-eabi-4.9"
+# Toolchain base path (without bin/)
+SET(TOOLCHAIN_PATH  "/opt/gcc-arm-none-eabi-4_9-2014q4/"
   CACHE PATH "Toolchain install dir" FORCE)
-
-SET(CROSS_COMPILE  "arm-none-eabi-" CACHE STRING "Architecture prefix including dash (-)" FORCE)
+# Cross-Compile Prefix
+SET(CROSS_COMPILE  "arm-none-eabi-"
+  CACHE STRING "Architecture prefix including dash (-)" FORCE)
 
 # Board name for local component dir 
-SET(BOARD  "EK_TM4C129EXL" CACHE STRING "Board identification" FORCE)
+SET(PROCESSOR_FAMILY "ARM_CM4F"
+  CACHE STRING "Generic Processor information for porting" FORCE)
+SET(BOARD  "EK_TM4C129EXL"
+  CACHE STRING "Board identification" FORCE)
 
 # TivaWare Compilation  settings
-SET(TIVA_PART_NAME  "TM4C129ENCPDT" CACHE STRING "TivaWare compilation flag -DPART_..." FORCE)
-SET(TIVA_TARGET  "TARGET_IS_TM4C129_RA0" CACHE STRING "TivaWare compilation flag -DTARGET_IS..." FORCE)
+SET(TIVA_PART_NAME  "TM4C129ENCPDT"
+  CACHE STRING "TivaWare compilation flag -DPART_..." FORCE)
+SET(TIVA_TARGET  "TARGET_IS_TM4C129_RA0"
+  CACHE STRING "TivaWare compilation flag -DTARGET_IS..." FORCE)
+
 
 # Some stripped down version of a sysroot i.e. where to find libraries
-SET(COMPONENT_DIR "~/Components/${BOARD}"
-  CACHE STRING "Additional libraries" FORCE) 
+SET(COMPONENT_DIR "/home/ruschi/Coding/Components/${BOARD}"
+  CACHE STRING "Additional libraries" FORCE)
 
 # Append staging dir (where make install puts the packages)
-SET(STAGING_DIR "J:/tmp/${BOARD}" CACHE STRING "temporary rootfs")
-
-# User did not provide install prefix via cmake commandline
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
-	MESSAGE(STATUS "installl : ${CMAKE_INSTALL_PREFIX} " )
-  SET(CMAKE_INSTALL_PREFIX  ${STAGING_DIR} CACHE PATH "")
-endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+SET(STAGING_DIR "/home/ruschi/tmp/${BOARD}"
+  CACHE STRING "temporary rootfs")
 
 #Default to Release-Build
 IF(NOT CMAKE_BUILD_TYPE)
@@ -45,11 +42,9 @@ ENDIF(NOT CMAKE_BUILD_TYPE)
 
 
 # specify the cross compiler
-SET(CMAKE_C_COMPILER   "${TOOLCHAIN_PATH}/bin/${CROSS_COMPILE}gcc${EXECUTABLE_SUFFIX}" )
-SET(CMAKE_CXX_COMPILER "${TOOLCHAIN_PATH}/bin/${CROSS_COMPILE}g++${EXECUTABLE_SUFFIX}" )
-SET(CMAKE_ASM_COMPILER "${TOOLCHAIN_PATH}/bin/${CROSS_COMPILE}as${EXECUTABLE_SUFFIX}")
-SET(CMAKE_ARCHIVER "${TOOLCHAIN_PATH}/bin/${CROSS_COMPILE}ar${EXECUTABLE_SUFFIX}")
-
+SET(CMAKE_C_COMPILER   "${TOOLCHAIN_PATH}/bin/${CROSS_COMPILE}gcc" )
+SET(CMAKE_CXX_COMPILER "${TOOLCHAIN_PATH}/bin/${CROSS_COMPILE}g++" )
+SET(CMAKE_ASM_COMPILER "${TOOLCHAIN_PATH}/bin/${CROSS_COMPILE}as")
 
 set(CMAKE_EXECUTABLE_SUFFIX_CXX ".afx")
 set(CMAKE_EXECUTABLE_SUFFIX_C ".afx")
@@ -59,12 +54,12 @@ set(CMAKE_EXECUTABLE_SUFFIX_C ".afx")
 SET(CMAKE_NO_SYSTEM_FROM_IMPORTED true)
 
 # Where to look for libraries and headers
-SET(CMAKE_FIND_ROOT_PATH  "${TOOLCHAIN_PATH};${COMPONENT_DIR}")
+SET(CMAKE_FIND_ROOT_PATH  "/opt/gcc-arm-none-eabi-4_9-2014q4/arm-none-eabi/;${COMPONENT_DIR}")
 # search for programs in the build host directories
 SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 # for libraries and headers in the target directories
-SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH)
 
 # Configuration macros for TivaWare Compilation
 LIST(APPEND GNU_LAUNCHPAD_TARGET_DEFINITIONS ${TIVA_PART_NAME})
@@ -132,9 +127,9 @@ FOREACH(subdir ${SUBDIRS})
       LIST(APPEND CMAKE_PREFIX_PATH ${COMPONENT_DIR}/${BOARD}/${subdir})
 ENDFOREACH()
 
-SUBDIRLIST(SUBDIRS ${STAGING_DIR}/${BOARD})
+SUBDIRLIST(SUBDIRS ${STAGING_DIR})
 FOREACH(subdir ${SUBDIRS})
-      LIST(APPEND CMAKE_PREFIX_PATH ${STAGING_DIR}/${BOARD}/${subdir})
+      LIST(APPEND CMAKE_PREFIX_PATH ${STAGING_DIR}/${subdir})
 ENDFOREACH()
 
 # Append staging dir (where make install puts the packages)
