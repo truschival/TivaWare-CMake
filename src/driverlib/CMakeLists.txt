@@ -17,44 +17,48 @@ set(namespace "${PROJECT_NAMESPACE}")
 # Dependencies
 #------------------------------
 
-# No dependencies so far
-SET(MODULE_DEPS "")
+if(TARGET TivaHeaders )
+  add_library(${PROJECT_NAME}::TivaHeaders ALIAS TivaHeaders)
+else() # Import it externally if not built before
+    find_package(${PROJECT_NAME} COMPONENTS TivaHeaders CONFIG REQUIRED)
+endif()
+LIST(APPEND MODULE_DEPS ${PROJECT_NAME}::TivaHeaders)
 
 #------------------------------
 # normal sources
 #------------------------------
 set(SRCS
-  ${CMAKE_CURRENT_SOURCE_DIR}/adc.c        
-  ${CMAKE_CURRENT_SOURCE_DIR}/aes.c        
-  ${CMAKE_CURRENT_SOURCE_DIR}/can.c        
-  ${CMAKE_CURRENT_SOURCE_DIR}/comp.c       
-  ${CMAKE_CURRENT_SOURCE_DIR}/cpu.c        
-  ${CMAKE_CURRENT_SOURCE_DIR}/crc.c        
-  ${CMAKE_CURRENT_SOURCE_DIR}/des.c        
-  ${CMAKE_CURRENT_SOURCE_DIR}/eeprom.c     
-  ${CMAKE_CURRENT_SOURCE_DIR}/emac.c       
-  ${CMAKE_CURRENT_SOURCE_DIR}/epi.c        
-  ${CMAKE_CURRENT_SOURCE_DIR}/flash.c      
-  ${CMAKE_CURRENT_SOURCE_DIR}/fpu.c        
-  ${CMAKE_CURRENT_SOURCE_DIR}/gpio.c       
-  ${CMAKE_CURRENT_SOURCE_DIR}/hibernate.c  
-  ${CMAKE_CURRENT_SOURCE_DIR}/i2c.c        
-  ${CMAKE_CURRENT_SOURCE_DIR}/interrupt.c  
-  ${CMAKE_CURRENT_SOURCE_DIR}/lcd.c	 
-  ${CMAKE_CURRENT_SOURCE_DIR}/mpu.c	 
-  ${CMAKE_CURRENT_SOURCE_DIR}/onewire.c 
-  ${CMAKE_CURRENT_SOURCE_DIR}/pwm.c	 
-  ${CMAKE_CURRENT_SOURCE_DIR}/qei.c	 
-  ${CMAKE_CURRENT_SOURCE_DIR}/shamd5.c	 
-  ${CMAKE_CURRENT_SOURCE_DIR}/ssi.c	 
-  ${CMAKE_CURRENT_SOURCE_DIR}/sw_crc.c	 
-  ${CMAKE_CURRENT_SOURCE_DIR}/sysctl.c	 
-  ${CMAKE_CURRENT_SOURCE_DIR}/sysexc.c	 
-  ${CMAKE_CURRENT_SOURCE_DIR}/systick.c 
-  ${CMAKE_CURRENT_SOURCE_DIR}/timer.c	 
-  ${CMAKE_CURRENT_SOURCE_DIR}/uart.c	 
-  ${CMAKE_CURRENT_SOURCE_DIR}/udma.c	 
-  ${CMAKE_CURRENT_SOURCE_DIR}/usb.c	   
+  ${CMAKE_CURRENT_SOURCE_DIR}/adc.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/aes.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/can.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/comp.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/cpu.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/crc.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/des.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/eeprom.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/emac.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/epi.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/flash.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/fpu.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/gpio.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/hibernate.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/i2c.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/interrupt.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/lcd.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/mpu.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/onewire.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/pwm.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/qei.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/shamd5.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/ssi.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/sw_crc.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/sysctl.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/sysexc.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/systick.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/timer.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/uart.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/udma.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/usb.c
   ${CMAKE_CURRENT_SOURCE_DIR}/watchdog.c
   )
 

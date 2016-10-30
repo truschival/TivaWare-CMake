@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.1.3)
+cmake_minimum_required (VERSION 3.3.0)
 
 SET(CMAKE_VERBOSE_MAKEFILE ON)
 SET(CMAKE_COLOR_MAKEFILE ON)
@@ -21,7 +21,8 @@ message(STATUS "Running ${CMAKE_COMMAND} ${CMAKE_VERSION} on ${CMAKE_PROJECT_NAM
 
 # User did not provide install prefix via cmake commandline
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
-  SET(CMAKE_INSTALL_PREFIX ${STAGING_DIR} )
+  SET(CMAKE_INSTALL_PREFIX ${STAGING_DIR}
+	CACHE PATH "Installation Directory" FORCE)
 endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 #-------------------------------------------------------------------------------
@@ -38,8 +39,6 @@ message(STATUS "" )
 #-------------------------------------------------------------------------------
 # This project has no include / src directory separation
 SET(PROJECT_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${PROJECT_INCLUDE_DIR})
-
 
 #-------------------------------------------------------------------------------
 # Output  configuration
@@ -74,6 +73,7 @@ set(generated_dir "${CMAKE_BINARY_DIR}/generated")
 set(version_config "${generated_dir}/${COMPONENT_NAME}ConfigVersion.cmake")
 set(component_config "${generated_dir}/${COMPONENT_NAME}Config.cmake")
 set(targets_export_name "${COMPONENT_NAME}Targets")
+set(namespace "${PROJECT_NAMESPACE}")
 
 export(PACKAGE ${PROJECT_NAME})
 
@@ -81,13 +81,58 @@ export(PACKAGE ${PROJECT_NAME})
 set(PROJECT_NAMESPACE ${PROJECT_NAME})
 
 #-------------------------------------------------------------------------------
+# Header Only Top-Level Target TivaWare to install generic headers
+#-------------------------------------------------------------------------------
+string(TOLOWER ${TIVA_PART_NAME} DEVICE_HEADER)
+
+add_library(TivaHeaders ${PROJECT_INCLUDE_DIR}/inc/${DEVICE_HEADER}.h )
+set_target_properties(TivaHeaders PROPERTIES LINKER_LANGUAGE C)
+
+target_include_directories(
+  TivaHeaders
+  PRIVATE
+  $<BUILD_INTERFACE:${PROJECT_INCLUDE_DIR}/TivaWare>
+  PUBLIC
+  $<BUILD_INTERFACE:${PROJECT_INCLUDE_DIR}/TivaWare>
+  )
+
+INSTALL(
+  TARGETS  TivaHeaders
+  EXPORT   TivaHeadersTargets
+  ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
+  INCLUDES DESTINATION ${INSTALL_INCLUDE_DIR}/${PROJECT_NAME}
+  )
+
+# Generic TivaWare headers
+INSTALL(DIRECTORY
+  ${PROJECT_INCLUDE_DIR}/inc
+  COMPONENT DEVELOP
+  DESTINATION ${INSTALL_INCLUDE_DIR}/TivaWare
+  )
+
+INSTALL(
+  EXPORT TivaHeadersTargets
+  NAMESPACE "${namespace}::"
+  COMPONENT DEVELOP
+  DESTINATION "${INSTALL_CMAKE_DIR}/${namespace}"
+  )
+
+#-------------------------------------------------------------------------------
 # Include Src to build library driverlib, utils and drivers
 #-------------------------------------------------------------------------------
 add_subdirectory(src)
 
 # --------------------------------------------------------------------
-# Config package TivaWare
+# Config top-level package TivaWare
 # --------------------------------------------------------------------
+
+
+INSTALL(
+  FILES "${component_config}" "${version_config}"
+  COMPONENT DEVELOP
+  DESTINATION "${INSTALL_CMAKE_DIR}/${namespace}"
+  )  
+
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
   ${version_config}
@@ -98,13 +143,8 @@ write_basic_package_version_file(
 configure_file("${CMAKE_SOURCE_DIR}/cmake/Config.master.cmake.in"
   "${component_config}" @ONLY)
 
-INSTALL(
-  FILES "${component_config}" "${version_config}"
-  COMPONENT DEVELOP
-  DESTINATION "${INSTALL_CMAKE_DIR}/${namespace}"
-  )  
-  
-  
+
+
 # --------------------------------------------------------------------
 # Generate CPACK installer
 # --------------------------------------------------------------------
@@ -115,7 +155,7 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_PACKAGE_INSTALL_DIRECTORY ${PROJECT_NAME}-${PROJECT_VERSION})
 SET(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE)
-set(CPACK_COMPONENT_DEVELOP_DISPLAY_NAME "Libraries + Headers")
+set(CPACK_COMPONENT_DEVELOP_DISPLAY_NAME "libraries + header files")
 set(CPACK_COMPONENT_APIDOC_DISPLAY_NAME "API Documentation")
 
 set(CPACK_COMPONENT_DEVELOP_DESCRIPTION "Components needed for development")
