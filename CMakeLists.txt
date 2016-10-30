@@ -80,42 +80,6 @@ export(PACKAGE ${PROJECT_NAME})
 # Namspace for all submodule targets
 set(PROJECT_NAMESPACE ${PROJECT_NAME})
 
-#-------------------------------------------------------------------------------
-# Header Only Top-Level Target TivaWare to install generic headers
-#-------------------------------------------------------------------------------
-string(TOLOWER ${TIVA_PART_NAME} DEVICE_HEADER)
-
-add_library(TivaHeaders ${PROJECT_INCLUDE_DIR}/inc/${DEVICE_HEADER}.h )
-set_target_properties(TivaHeaders PROPERTIES LINKER_LANGUAGE C)
-
-target_include_directories(
-  TivaHeaders
-  PRIVATE
-  $<BUILD_INTERFACE:${PROJECT_INCLUDE_DIR}/TivaWare>
-  PUBLIC
-  $<BUILD_INTERFACE:${PROJECT_INCLUDE_DIR}/TivaWare>
-  )
-
-INSTALL(
-  TARGETS  TivaHeaders
-  EXPORT   TivaHeadersTargets
-  ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
-  INCLUDES DESTINATION ${INSTALL_INCLUDE_DIR}/${PROJECT_NAME}
-  )
-
-# Generic TivaWare headers
-INSTALL(DIRECTORY
-  ${PROJECT_INCLUDE_DIR}/inc
-  COMPONENT DEVELOP
-  DESTINATION ${INSTALL_INCLUDE_DIR}/TivaWare
-  )
-
-INSTALL(
-  EXPORT TivaHeadersTargets
-  NAMESPACE "${namespace}::"
-  COMPONENT DEVELOP
-  DESTINATION "${INSTALL_CMAKE_DIR}/${namespace}"
-  )
 
 #-------------------------------------------------------------------------------
 # Include Src to build library driverlib, utils and drivers

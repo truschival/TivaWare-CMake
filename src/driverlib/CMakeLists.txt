@@ -17,12 +17,12 @@ set(namespace "${PROJECT_NAMESPACE}")
 # Dependencies
 #------------------------------
 
-if(TARGET TivaHeaders )
-  add_library(${PROJECT_NAME}::TivaHeaders ALIAS TivaHeaders)
+if(TARGET TivaHeaders)
+  add_library(${namespace}::TivaHeaders ALIAS TivaHeaders)
 else() # Import it externally if not built before
-    find_package(${PROJECT_NAME} COMPONENTS TivaHeaders CONFIG REQUIRED)
+  find_package(${namespace} COMPONENTS TivaHeaders CONFIG REQUIRED)
 endif()
-LIST(APPEND MODULE_DEPS ${PROJECT_NAME}::TivaHeaders)
+LIST(APPEND MODULE_DEPS ${namespace}::TivaHeaders)
 
 #------------------------------
 # normal sources
@@ -81,10 +81,11 @@ target_include_directories(
   ${LIBRARY_NAME}
   PRIVATE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<BUILD_INTERFACE:${PROJECT_INCLUDE_DIR}/${LIBRARY_NAME}>
-  PUBLIC
   $<BUILD_INTERFACE:${PROJECT_INCLUDE_DIR}>
   $<BUILD_INTERFACE:${PROJECT_INCLUDE_DIR}/${LIBRARY_NAME}>
+  PUBLIC
+  $<BUILD_INTERFACE:${PROJECT_INCLUDE_DIR}/${namespace}/>
+  $<BUILD_INTERFACE:${PROJECT_INCLUDE_DIR}/${namespace}/${LIBRARY_NAME}>
   )
 
 # Add dependencies to library to pass
@@ -120,14 +121,14 @@ INSTALL(TARGETS ${LIBRARY_NAME}
   RUNTIME DESTINATION ${INSTALL_BIN_DIR}
   # this will only add -I<prefix>/include to client compile flags
   # The users of the library have to #include "driverlib/foo.h"
-  INCLUDES DESTINATION ${INSTALL_INCLUDE_DIR}
+  INCLUDES DESTINATION ${INSTALL_INCLUDE_DIR}/${namespace}
   )
 
 # Driverlib headers
 INSTALL(DIRECTORY
   ${PROJECT_INCLUDE_DIR}/${LIBRARY_NAME}
   COMPONENT DEVELOP
-  DESTINATION ${INSTALL_INCLUDE_DIR}
+  DESTINATION ${INSTALL_INCLUDE_DIR}/${namespace}
   )
 
 INSTALL(
